@@ -1,10 +1,743 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>我的个人主页</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>淘宝首页 - 模拟</title>
+    <style>
+        /* ========== 全局重置 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul {
+            list-style: none;
+        }
+
+        /* ========== 顶部导航条 ========== */
+        .top-bar {
+            background-color: #fafafa;
+            border-bottom: 1px solid #e5e5e5;
+            font-size: 12px;
+            color: #999;
+            padding: 6px 0;
+        }
+        .top-bar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .top-bar .left a,
+        .top-bar .right a {
+            margin-right: 16px;
+            color: #999;
+            transition: color 0.2s;
+        }
+        .top-bar .left a:hover,
+        .top-bar .right a:hover {
+            color: #ff4400;
+        }
+        .top-bar .right .qr {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .top-bar .right .qr::after {
+            content: "📱";
+            font-size: 14px;
+        }
+
+        /* ========== 头部（Logo + 搜索） ========== */
+        .header {
+            background: #fff;
+            padding: 20px 0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        .header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ff4400;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .logo span {
+            background: #ff4400;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 400;
+            padding: 2px 8px;
+            border-radius: 12px;
+            letter-spacing: 0;
+        }
+        .search-box {
+            flex: 1;
+            display: flex;
+            max-width: 600px;
+            height: 40px;
+            border: 2px solid #ff4400;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 0 18px;
+            font-size: 14px;
+            background: transparent;
+        }
+        .search-box button {
+            width: 80px;
+            border: none;
+            background: #ff4400;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 0 20px 20px 0;
+        }
+        .search-box button:hover {
+            background: #e63e00;
+        }
+        .header .cart {
+            font-size: 20px;
+            background: #fff2ee;
+            color: #ff4400;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .header .cart:hover {
+            background: #ffe6df;
+        }
+
+        /* ========== 主导航菜单 ========== */
+        .main-nav {
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        .main-nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .main-nav a {
+            padding: 12px 0;
+            font-weight: 500;
+            color: #333;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .main-nav a:hover {
+            color: #ff4400;
+            border-bottom-color: #ff4400;
+        }
+        .main-nav .all-cat {
+            color: #ff4400;
+            font-weight: 600;
+        }
+
+        /* ========== 主内容 ========== */
+        .main-content {
+            max-width: 1200px;
+            margin: 16px auto 0;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 210px 1fr;
+            gap: 16px;
+        }
+
+        /* -------- 左侧分类 -------- */
+        .category-side {
+            background: #fff;
+            border-radius: 12px;
+            padding: 12px 0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            height: fit-content;
+        }
+        .category-side li {
+            padding: 8px 20px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            border-radius: 4px;
+            margin: 0 6px;
+        }
+        .category-side li:hover {
+            background: #fff2ee;
+            color: #ff4400;
+        }
+        .category-side li .arrow {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        /* -------- 右侧区域（轮播 + 卡片） -------- */
+        .right-area {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 轮播图 */
+        .carousel {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            position: relative;
+            aspect-ratio: 4 / 1.6;
+        }
+        .carousel .slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .carousel .slide {
+            flex: 0 0 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        .carousel .slide:nth-child(1) {
+            background: linear-gradient(135deg, #ff6a00, #ee0979);
+        }
+        .carousel .slide:nth-child(2) {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+        }
+        .carousel .slide:nth-child(3) {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        }
+        .carousel .slide:nth-child(4) {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+        }
+        .carousel .dots {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .carousel .dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .carousel .dots span.active {
+            background: #fff;
+            transform: scale(1.3);
+        }
+
+        /* -------- 快捷入口（图标网格） -------- */
+        .quick-entry {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 6px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        .quick-entry .item {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding: 6px 0;
+            border-radius: 8px;
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+        .quick-entry .item:hover {
+            background: #f5f5f5;
+        }
+        .quick-entry .item .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* ========== 商品区域标题 ========== */
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 20px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title .badge {
+            font-size: 12px;
+            background: #ff4400;
+            color: #fff;
+            padding: 0 12px;
+            border-radius: 12px;
+            font-weight: 400;
+        }
+        .section-title .more {
+            font-size: 13px;
+            font-weight: 400;
+            color: #999;
+            margin-left: auto;
+            cursor: pointer;
+        }
+        .section-title .more:hover {
+            color: #ff4400;
+        }
+
+        /* ========== 商品网格 ========== */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            padding-bottom: 12px;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        .product-card .img {
+            height: 160px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            background-size: cover;
+            background-position: center;
+        }
+        .product-card .info {
+            padding: 10px 14px 0;
+        }
+        .product-card .name {
+            font-size: 14px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 40px;
+            color: #333;
+        }
+        .product-card .price {
+            margin-top: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff4400;
+        }
+        .product-card .price small {
+            font-size: 13px;
+            font-weight: 400;
+        }
+        .product-card .sales {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* ========== 底部 ========== */
+        .footer {
+            text-align: center;
+            padding: 30px 20px 20px;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid #e5e5e5;
+            margin-top: 20px;
+            background: #fafafa;
+        }
+        .footer a {
+            margin: 0 10px;
+            color: #999;
+        }
+        .footer a:hover {
+            color: #ff4400;
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .category-side {
+                display: none;
+            }
+            .quick-entry {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .header .container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .search-box {
+                max-width: 100%;
+            }
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .quick-entry {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .top-bar .container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello, World!</h1>
-    <p>这是我的 GitHub Pages 网站</p>
+
+    <!-- ===== 顶部导航条 ===== -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="left">
+                <a href="#">亲，请登录</a>
+                <a href="#">免费注册</a>
+                <a href="#">我的淘宝</a>
+                <a href="#">收藏夹</a>
+            </div>
+            <div class="right">
+                <a href="#">淘宝网</a>
+                <a href="#">手机版</a>
+                <a href="#" class="qr">二维码</a>
+                <a href="#">客服</a>
+                <a href="#">联系客服</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 头部 ===== -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                🛒 淘宝 <span>mall</span>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="搜索 宝贝 店铺 品牌" value="连衣裙" />
+                <button>搜索</button>
+            </div>
+            <a href="#" class="cart">🛍️ 购物车</a>
+        </div>
+    </header>
+
+    <!-- ===== 主导航 ===== -->
+    <nav class="main-nav">
+        <div class="container">
+            <a href="#" class="all-cat">☰ 全部商品分类</a>
+            <a href="#">推荐</a>
+            <a href="#">服装</a>
+            <a href="#">手机</a>
+            <a href="#">电脑</a>
+            <a href="#">家电</a>
+            <a href="#">美妆</a>
+            <a href="#">母婴</a>
+            <a href="#">食品</a>
+            <a href="#">运动</a>
+            <a href="#">更多</a>
+        </div>
+    </nav>
+
+    <!-- ===== 主内容 ===== -->
+    <div class="main-content">
+
+        <!-- 左侧分类 -->
+        <ul class="category-side">
+            <li>女装 / 男装 <span class="arrow">›</span></li>
+            <li>手机 / 数码 <span class="arrow">›</span></li>
+            <li>电脑 / 办公 <span class="arrow">›</span></li>
+            <li>家电 / 电器 <span class="arrow">›</span></li>
+            <li>美妆 / 个护 <span class="arrow">›</span></li>
+            <li>母婴 / 玩具 <span class="arrow">›</span></li>
+            <li>食品 / 生鲜 <span class="arrow">›</span></li>
+            <li>运动 / 户外 <span class="arrow">›</span></li>
+            <li>汽车 / 配件 <span class="arrow">›</span></li>
+            <li>家装 / 家具 <span class="arrow">›</span></li>
+        </ul>
+
+        <!-- 右侧区域 -->
+        <div class="right-area">
+
+            <!-- 轮播图 -->
+            <div class="carousel" id="carousel">
+                <div class="slides" id="slides">
+                    <div class="slide">🔥 夏日狂欢 全场低至3折</div>
+                    <div class="slide">📱 新款手机 现货抢购</div>
+                    <div class="slide">🎮 数码家电 以旧换新</div>
+                    <div class="slide">🍉 生鲜水果 产地直发</div>
+                </div>
+                <div class="dots" id="dots">
+                    <span class="active"></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <!-- 快捷入口 -->
+            <div class="quick-entry">
+                <div class="item"><span class="icon">👗</span>女装</div>
+                <div class="item"><span class="icon">👔</span>男装</div>
+                <div class="item"><span class="icon">📱</span>手机</div>
+                <div class="item"><span class="icon">💻</span>电脑</div>
+                <div class="item"><span class="icon">📺</span>家电</div>
+                <div class="item"><span class="icon">💄</span>美妆</div>
+                <div class="item"><span class="icon">🍼</span>母婴</div>
+                <div class="item"><span class="icon">🍜</span>食品</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 商品区域 ===== -->
+    <div style="max-width:1200px; margin:0 auto; padding:0 20px;">
+
+        <div class="section-title">
+            🔥 热卖爆款
+            <span class="badge">限时抢购</span>
+            <span class="more">查看全部 ›</span>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="img" style="background:#fce4ec;">👗</div>
+                <div class="info">
+                    <div class="name">夏季新款碎花连衣裙 仙气十足</div>
+                    <div class="price">¥129 <small>起</small></div>
+                    <div class="sales">已售 2.6万</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="img" style="background:#e8f5e9;">📱</div>
+                <div class="info">
+                    <div class="name">5G智能手机 12GB+256GB 旗舰芯片</div>
+                    <div class="price">¥2999 <small>起</small></div>
+                    <div class="sales">已售 1.2万</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="img" style="background:#fff3e0;">🎧</div>
+                <div class="info">
+                    <div class="name">降噪蓝牙耳机 超长续航 高清音质</div>
+                    <div class="price">¥399 <small>起</small></div>
+                    <div class="sales">已售 8.7k</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="img" style="background:#f3e5f5;">💄</div>
+                <div class="info">
+                    <div class="name">大牌口红礼盒 限量版 多色可选</div>
+                    <div class="price">¥249 <small>起</small></div>
+                    <div class="sales">已售 5.3k</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="img" style="background:#e0f7fa;">⌚</div>
+                <div class="info">
+                    <div class="name">智能运动手表 心率血氧 GPS定位</div>
+                    <div class="price">¥599 <small>起</small></div>
+                    <div class="sales">已售 3.9k</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            📦 猜你喜欢
+            <span class="more">查看更多 ›</span>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="img" style="background:#fbe9e7;">👟</div>
+                <div class="info">
+                    <div class="name">经典运动跑鞋 轻便透气 百搭款</div>
+                    <div class="price">¥189 <small>起</small></div>
+                    <div class="sales">已售 4.2k</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="img" style="background:#e8eaf6;">👜</div>
+                <div class="info">
+                    <div class="name">时尚手提包 通勤百搭 大容量</div>
+                    <div class="price">¥269 <small>起</small></div>
+                    <div class="sales">已售 2.1k</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="img" style="background:#fff8e1;">🍫</div>
+                <div class="info">
+                    <div class="name">进口巧克力礼盒 送女友 浪漫</div>
+                    <div class="price">¥99 <small>起</small></div>
+                    <div class="sales">已售 6.8k</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="img" style="background:#e0f2f1;">🧴</div>
+                <div class="info">
+                    <div class="name">防晒护肤品套装 清爽不油腻</div>
+                    <div class="price">¥159 <small>起</small></div>
+                    <div class="sales">已售 3.3k</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="img" style="background:#fce4ec;">🧸</div>
+                <div class="info">
+                    <div class="name">毛绒玩具 公仔 超大号 可爱</div>
+                    <div class="price">¥79 <small>起</small></div>
+                    <div class="sales">已售 9.1k</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 底部 ===== -->
+    <div class="footer">
+        <div>
+            <a href="#">关于我们</a>
+            <a href="#">帮助中心</a>
+            <a href="#">隐私政策</a>
+            <a href="#">商家入驻</a>
+            <a href="#">联系我们</a>
+        </div>
+        <div style="margin-top:10px;">
+            © 2026 淘宝模拟  |  仅供学习参考
+        </div>
+    </div>
+
+    <!-- ===== 轮播图 JS ===== -->
+    <script>
+        (function() {
+            const slides = document.getElementById('slides');
+            const dots = document.getElementById('dots').children;
+            let current = 0;
+            const total = dots.length;
+            let timer = null;
+
+            function goTo(index) {
+                if (index < 0) index = total - 1;
+                if (index >= total) index = 0;
+                current = index;
+                slides.style.transform = 'translateX(-' + (current * 100) + '%)';
+                for (let i = 0; i < dots.length; i++) {
+                    dots[i].classList.toggle('active', i === current);
+                }
+            }
+
+            function next() {
+                goTo(current + 1);
+            }
+
+            // 点击小圆点跳转
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].addEventListener('click', function() {
+                    goTo(i);
+                    resetTimer();
+                });
+            }
+
+            // 自动轮播
+            function startTimer() {
+                if (timer) clearInterval(timer);
+                timer = setInterval(next, 3000);
+            }
+
+            function resetTimer() {
+                if (timer) clearInterval(timer);
+                startTimer();
+            }
+
+            // 鼠标悬停暂停
+            const carousel = document.getElementById('carousel');
+            carousel.addEventListener('mouseenter', function() {
+                if (timer) clearInterval(timer);
+            });
+            carousel.addEventListener('mouseleave', function() {
+                startTimer();
+            });
+
+            // 初始化
+            goTo(0);
+            startTimer();
+
+            // 支持触摸滑动（简单）
+            let startX = 0;
+            carousel.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].clientX;
+            });
+            carousel.addEventListener('touchend', function(e) {
+                const endX = e.changedTouches[0].clientX;
+                const diff = startX - endX;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) goTo(current + 1);
+                    else goTo(current - 1);
+                    resetTimer();
+                }
+            });
+        })();
+    </script>
+
 </body>
 </html>
