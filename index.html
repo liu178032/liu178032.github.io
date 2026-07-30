@@ -743,29 +743,10 @@
 
 
     <!-- 客服聊天组件 -->
-  <button onclick="openChat()">Contact Support</button>
-
-  <script>
-    (function(w, c) {
-      w[c] = w[c] || function() { (w[c].q = w[c].q || []).push(arguments) };
-    })(window, 'CustomerChat');
-  </script>
-
-  <script>
-    CustomerChat('init', {
-      orgUid: 'df_org_uid',
-      sid: 'bytedesk',
-      apiBaseUrl: 'http://47.103.98.97:3000/api',
-      wsUrl: 'ws://47.103.98.97:3000/socket.io',
-      locale: 'zh-CN'
-    });
-
-    function openChat() {
-      CustomerChat('activate');
-    }
-  </script>
-
-  <script src="http://47.103.98.97:3000/agent-management/customer-chat-widget.js"></script>
+<script src="http://47.103.98.97:8080/customer-protal/chat-widget.js"></script>
+<script>
+  CustomerChat('init', { orgUid: 'df_org_uid' });
+</script>
     
 </body>
 </html>
